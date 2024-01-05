@@ -91,3 +91,11 @@ join film_category b on a.film_id = b.film_id
 join category c on b.category_id = c.category_id
 where name in ('Drama', 'Sports')
 order by length desc
+
+-- Q4
+select name, count(film_id) count
+from film_category a
+join category b
+on a.category_id = b.category_id
+group by name
+order by count desc
