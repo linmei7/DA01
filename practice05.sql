@@ -46,7 +46,7 @@ order by mng.employee_id
 
 -- Ex6
 select product_name, sum(unit) unit
-from products a
+from products a 
 join orders b
 on a.product_id = b.product_id
 where extract(month from order_date) = 2
@@ -63,3 +63,31 @@ WHERE b.page_id IS NULL
 ORDER BY a.page_id
   
 * Mid-course test
+-- Q1
+select distinct replacement_cost
+from film
+order by replacement_cost
+
+-- Q2
+select
+sum(case
+   when replacement_cost between 9.99 and 19.99 then 1
+   else 0
+end) low,
+sum(case
+   when replacement_cost between 20.00 and 24.99 then 1
+   else 0
+end) medium,
+sum(case
+   when replacement_cost between 25.00 and 29.99 then 1
+   else 0
+end) high
+from film
+
+-- Q3
+select title, length, name
+from film a
+join film_category b on a.film_id = b.film_id
+join category c on b.category_id = c.category_id
+where name in ('Drama', 'Sports')
+order by length desc
