@@ -67,9 +67,11 @@ ORDER BY a.page_id
 select distinct replacement_cost
 from film
 order by replacement_cost
+limit 1
 
 -- Q2
-select
+select low
+from (select
 sum(case
    when replacement_cost between 9.99 and 19.99 then 1
    else 0
@@ -82,15 +84,17 @@ sum(case
    when replacement_cost between 25.00 and 29.99 then 1
    else 0
 end) high
-from film
+from film) cat
 
 -- Q3
-select title, length, name
+select name, length
+from (select title, length, name
 from film a
 join film_category b on a.film_id = b.film_id
 join category c on b.category_id = c.category_id
 where name in ('Drama', 'Sports')
-order by length desc
+order by length desc) list
+limit 1
 
 -- Q4
 select name, count(film_id) count
@@ -99,3 +103,49 @@ join category b
 on a.category_id = b.category_id
 group by name
 order by count desc
+limit 1
+
+-- Q5
+select first_name, last_name, count(film_id) count
+from actor a
+join film_actor b
+on a.actor_id = b.actor_id
+group by first_name, last_name
+order by count desc
+limit 1
+
+-- Q6
+select count(a.address_id)
+from address a
+left join customer b
+on a.address_id = b.address_id
+where customer_id is null
+
+-- Q7
+select city,
+case
+	when sum(amount) is not null then sum(amount)
+	else 0
+end revenue
+from city a
+left join address b on a.city_id = b.city_id
+left join customer c on b.address_id = c.address_id
+left join payment d on c.customer_id = d.customer_id
+group by city
+order by revenue desc
+limit 1
+
+-- Q8
+select city || ', ' || country place,
+case
+	when sum(amount) is not null then sum(amount)
+	else 0
+end revenue
+from country e
+join city a on e.country_id = a.country_id
+left join address b on a.city_id = b.city_id
+left join customer c on b.address_id = c.address_id
+left join payment d on c.customer_id = d.customer_id
+group by city || ', ' || country
+order by revenue desc
+limit 1
